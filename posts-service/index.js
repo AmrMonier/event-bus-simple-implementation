@@ -20,7 +20,7 @@ app.post('/posts', (req, res) =>{
     const {title} = req.body
     posts[id]= {id, title}
     axios.post(eventBusURL + '/events', {
-        ...posts[id],
+        data: posts[id],
         tag: 'post_created'
     })
     res.status(201).json(posts[id])

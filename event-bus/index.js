@@ -15,6 +15,11 @@ const hosts = [
         id: 'comments',
         url: 'http://localhost:3001/events'
     },
+    {
+        id: 'query',
+        url: 'http://localhost:3003/events'
+    },
+
 ]
 
 app.post('/events', (req, res) =>{
