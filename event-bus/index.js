@@ -6,6 +6,7 @@ const axios = require("axios");
 const app = new experss();
 app.use(cors());
 app.use(bodyParser.json());
+const events = [];
 const hosts = [
   {
     id: "posts",
@@ -25,13 +26,16 @@ const hosts = [
   },
 ];
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
   console.log(req.body.tag);
-  hosts.forEach((host) => {
-    console.log(host.url);
-    axios.post(host.url, req.body);
-  });
+  events.push(req.body);
+  try {
+    await Promise.all(hosts.map((host) => axios.post(host.url, req.body)));
+  } catch (error) {}
   res.send();
 });
 
+app.get("/events", (req, res) => {
+  return res.send(events);
+});
 app.listen(3002, () => console.log("App running on 3002"));
