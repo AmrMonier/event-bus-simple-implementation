@@ -20,7 +20,7 @@ app.post("/posts/:id/comments", (req, res) => {
   const { content } = req.body;
   const comments = commentsByPostId[id];
   if (!comments) return res.status(404).json({ msg: "post not found" });
-  comments.push({ id: commentId, content });
+  comments.push({ id: commentId, content, status: "pending" });
   commentsByPostId[id] = comments;
   axios.post(eventBusURL, {
     tag: "comment_created",
@@ -29,12 +29,27 @@ app.post("/posts/:id/comments", (req, res) => {
   return res.status(201).json(comments);
 });
 
+const updateComment = (data) => {
+  const comments = commentsByPostId[data.postId];
+  let comment = comments.find((e) => e.id === data.id);
+  comment.status = data.status;
+  axios.post(eventBusURL, {
+    tag: "comment_updated",
+    data: {
+      ...comment,
+      postId: data.postId,
+    },
+  });
+};
 app.post("/events", (req, res) => {
-  console.log(req.body);
+  console.log(req.body.tag);
   const { tag, data } = req.body;
   switch (tag) {
     case "post_created":
       commentsByPostId[data.id] = [];
+      break;
+    case "comment_moderated":
+      updateComment(data);
       break;
   }
   return res.send();
