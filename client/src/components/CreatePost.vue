@@ -10,6 +10,7 @@
     </div>
 </template>
 <script lang="ts">
+import axios from 'axios'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -19,9 +20,18 @@ export default defineComponent({
         }
     },
     methods: {
-        submitForm(e: any) {
+        async submitForm(e: any) {
+            console.log(this.title)
             e.preventDefault()
-            console.log('submitted', this.title)
+            try {
+                const { data } = await axios.post("http://localhost:4000/posts", {
+                    title: this.title
+                })
+                console.log(data)
+            } catch (error) {
+                window.alert("Something went wrong, couldn't create the post")
+            }
+
             this.title = ''
         }
     }

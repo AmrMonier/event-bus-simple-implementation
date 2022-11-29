@@ -44,6 +44,13 @@ app.post("/posts", async (req, res) => {
   return res.json(response.data).status(response.status);
 });
 
+app.get("/posts", async (req, res) => {
+  const response = await sendGetRequestToService(
+    hosts.query + "/posts"
+  );
+  return res.json(response.data).status(response.status);
+});
+
 app.post("/comments", async (req, res) => {
   const response = await sendPostRequestToService(
     hosts.comments + "/posts/" + req.body.post_id + "/comments",

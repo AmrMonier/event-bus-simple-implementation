@@ -8,7 +8,21 @@ const app = new experss();
 app.use(cors());
 app.use(bodyParser.json());
 const posts = {};
-
+const handleEvents = (tag, data) => {
+  switch (tag) {
+    case "comment_created":
+      axios.post(eventBusURL, {
+        tag: "comment_moderated",
+        data: {
+          ...data,
+          status: CheckForBadWords(data.content) ? "rejected" : "approved",
+        },
+      });
+      break;
+    case "comment_updated":
+      break;
+  }
+}
 const CheckForBadWords = (value) => {
   const badWords = ["fuck", "damn", "bitch"];
   for (const word of badWords) {
@@ -35,4 +49,11 @@ app.post("/events", (req, res) => {
   }
   return res.send();
 });
-app.listen(3004, () => console.log("App running on 3004"));
+app.listen(3004, async () => {
+  console.log("App running on 3004");
+  const { data } = await axios.get(eventBusURL);
+  for (const event of data) {
+    console.log("handle missed event:" + event.tag);
+    handleEvents(event.tag, event.data);
+  }
+});
