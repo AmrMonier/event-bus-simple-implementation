@@ -6,7 +6,7 @@ const { default: axios } = require("axios");
 const eventBusURL = "http://localhost:3002/events";
 
 const app = new experss();
-app.use(cors());
+app.use(cors({}));
 app.use(bodyParser.json());
 const posts = {};
 const updateComment = (data) => {
