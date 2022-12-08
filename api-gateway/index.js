@@ -18,8 +18,8 @@ const sendPostRequestToService = async (host, data) => {
     return res;
   } catch (error) {
     return {
-      data: error.response.data || { msg: "Oops, Something went wrong" },
-      status: error.response.status || 500,
+      data: error.response?.data || { msg: "Oops, Something went wrong" },
+      status: error.response?.status || 500,
     };
   }
 };
@@ -30,8 +30,8 @@ const sendGetRequestToService = async (host, data) => {
     return res;
   } catch (error) {
     return {
-      data: error.response.data || { msg: "Oops, Something went wrong" },
-      status: error.response.status || 500,
+      data: error.response?.data || { msg: "Oops, Something went wrong" },
+      status: error.response?.status || 500,
     };
   }
 };
