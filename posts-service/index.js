@@ -4,7 +4,8 @@ const { randomBytes } = require("crypto");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 
-const eventBusURL = "http://localhost:3002";
+// const eventBusURL = "http://localhost:3002";
+const eventBusURL = "http://event-bus-cluster-ip-srv:3002";
 const app = new experss();
 app.use(cors());
 app.use(bodyParser.json());
@@ -28,4 +29,7 @@ app.post("/events", (req, res) => {
   console.log(req.body.tag);
   return res.send();
 });
-app.listen(3000, () => console.log("App running on 3000"));
+app.listen(3000, () => {
+  console.log('newer version: v2')
+  console.log("App running on 3000");
+});

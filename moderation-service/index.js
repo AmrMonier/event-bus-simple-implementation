@@ -2,8 +2,9 @@ const experss = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { default: axios } = require("axios");
+// const eventBusURL = "http://localhost:3002";
+const eventBusURL = "http://event-bus-cluster-ip-srv:3002/events";
 
-const eventBusURL = "http://localhost:3002/events";
 const app = new experss();
 app.use(cors());
 app.use(bodyParser.json());
@@ -51,9 +52,13 @@ app.post("/events", (req, res) => {
 });
 app.listen(3004, async () => {
   console.log("App running on 3004");
-  const { data } = await axios.get(eventBusURL);
-  for (const event of data) {
-    console.log("handle missed event:" + event.tag);
-    handleEvents(event.tag, event.data);
+  try {
+    const { data } = await axios.get(eventBusURL);
+    for (const event of data) {
+      console.log("handle missed event:" + event.tag);
+      handleEvents(event.tag, event.data);
+    }
+  } catch (error) {
+    console.log(error);
   }
 });

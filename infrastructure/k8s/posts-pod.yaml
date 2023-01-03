@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: posts
+
+spec:
+  containers:
+  - name: posts-container
+    image: amrmonier/post-service
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

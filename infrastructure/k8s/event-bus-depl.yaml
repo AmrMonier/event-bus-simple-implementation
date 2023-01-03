@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-bus
+  template:
+    metadata:
+      labels:
+        app: event-bus
+    spec:
+      containers:
+        - name: event-bus-container
+          image: amrmonier/event-bus-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-bus-cluster-ip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: event-bus
+  ports:
+  - name: event-bus
+    protocol: TCP
+    port: 3002
+    targetPort: 3002

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-deployment
+spec:
+  selector:
+    matchLabels:
+      app: comments
+  template:
+    metadata:
+      labels:
+        app: comments
+    spec:
+      containers:
+      - name: comments-container
+        image: amrmonier/comments-service
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-cluster-ip-srv
+spec:
+  selector:
+    app: comments
+  ports:
+  - name: comments
+    protocol: TCP
+    port: 3001
+    targetPort: 3001

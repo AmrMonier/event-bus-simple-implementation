@@ -7,9 +7,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const hosts = {
-  posts: "http://localhost:3000",
-  comments: "http://localhost:3001",
-  query: "http://localhost:3003",
+  // posts: "http://localhost:3000",
+  // comments: "http://localhost:3001",
+  // query: "http://localhost:3003",
+  posts: "http://posts-cluster-ip-srv:3000",
+  comments: "http://comments-cluster-ip-srv:3001",
+  query: "http://query-cluster-ip-srv:3003",
 };
 
 const sendPostRequestToService = async (host, data) => {
@@ -45,9 +48,7 @@ app.post("/posts", async (req, res) => {
 });
 
 app.get("/posts", async (req, res) => {
-  const response = await sendGetRequestToService(
-    hosts.query + "/posts"
-  );
+  const response = await sendGetRequestToService(hosts.query + "/posts");
   return res.json(response.data).status(response.status);
 });
 

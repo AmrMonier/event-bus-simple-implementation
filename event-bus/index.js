@@ -10,19 +10,19 @@ const events = [];
 const hosts = [
   {
     id: "posts",
-    url: "http://localhost:3000/events",
+    url: "http://posts-cluster-ip-srv:3000/events",
   },
   {
     id: "comments",
-    url: "http://localhost:3001/events",
+    url: "http://comments-cluster-ip-srv:3001/events",
   },
   {
     id: "query",
-    url: "http://localhost:3003/events",
+    url: "http://query-cluster-ip-srv:3003/events",
   },
   {
     id: "moderation",
-    url: "http://localhost:3004/events",
+    url: "http://moderation-cluster-ip-srv:3004/events",
   },
 ];
 
@@ -31,7 +31,9 @@ app.post("/events", async (req, res) => {
   events.push(req.body);
   try {
     await Promise.all(hosts.map((host) => axios.post(host.url, req.body)));
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
   res.send();
 });
 
