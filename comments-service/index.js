@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 
 // const eventBusURL = "http://localhost:3002";
-const eventBusURL = "http://event-bus-cluster-ip-srv:3002";
+const eventBusURL = "http://event-bus-cluster-ip-srv:3002/events";
 
 const app = new experss();
 app.use(cors());
@@ -46,6 +46,11 @@ const updateComment = (data) => {
 app.post("/events", (req, res) => {
   console.log(req.body.tag);
   const { tag, data } = req.body;
+  handleEvents(tag, data);
+  return res.send();
+});
+
+const handleEvents = (tag, data) => {
   switch (tag) {
     case "post_created":
       commentsByPostId[data.id] = [];
@@ -54,7 +59,16 @@ app.post("/events", (req, res) => {
       updateComment(data);
       break;
   }
-  return res.send();
+};
+app.listen(3001, async () => {
+  console.log("App running on 3001");
+  try {
+    const { data } = await axios.get(eventBusURL);
+    for (const event of data) {
+      console.log("handle missed event:" + event.tag);
+      handleEvents(event.tag, event.data);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
-
-app.listen(3001, () => console.log("App running on 3001"));
